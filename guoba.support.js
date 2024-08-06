@@ -10,14 +10,14 @@ export function supportGuoba() {
     // 如果你的插件没有在插件库里，那么需要填上补充信息
     // 如果存在的话，那么填不填就无所谓了，填了就以你的信息为准
     pluginInfo: {
-      name: 'bujidao',
-      title: 'bujidao',
+      name: '米游社工具',
+      title: '米游社工具',
       author: '@kissnavel',
       authorLink: 'https://github.com/kissnavel',
       link: 'https://github.com/kissnavel/bujidaoRUN',
       isV3: true,
       isV2: false,
-      description: '寄·寄·寄',
+      description: '米游社工具',
       // 显示图标，此为个性化配置
       // 图标可在 https://icon-sets.iconify.design 这里进行搜索
       icon: 'bx:atom',

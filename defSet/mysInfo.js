@@ -1,2 +1,2 @@
-import MysInfo from '../../../bujidao/model/mys/mysInfo.js'
+import MysInfo from '../../../mystool/model/mys/mysInfo.js'
 export default MysInfo

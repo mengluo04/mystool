@@ -16,8 +16,8 @@
   <div class="container" id="container">
     <div class="info_box">
       <div class="head-box type">
-        <div class="label">寄管理面板(配置文件路径: bujidao/config/config.yaml)</div>
-        <div class="title">#寄设置(可使用锅巴更改更多设置)</div>
+        <div class="label">米游社工具管理面板(配置文件路径: mystool/config/config.yaml)</div>
+        <div class="title">#米游社工具设置(可使用锅巴更改更多设置)</div>
       </div>
     </div>
     {{each schema cfgGroup}}
@@ -29,7 +29,7 @@
           <div class="cfg-line">
             {{cfgItem.title}}
             {{if cfgItem.type !== 'cron'}}
-            <span class="cfg-hint"> #寄设置{{cfgItem.key}}
+            <span class="cfg-hint"> #米游社工具设置{{cfgItem.key}}
               {{if cfgItem.type == 'num'}} {{cfgItem.def}}{{else}} 开启/关闭{{/if}}
             </span>
             {{/if}}

@@ -10,7 +10,7 @@ let command = Cfg.getConfig('command')
 export class ji_sign extends plugin {
     constructor() {
         super({
-            name: '寄·签到',
+            name: '米游社工具·签到',
             dsc: '',
             event: 'message',
             priority: Cfg.getConfig('config').priority ?? -114514,

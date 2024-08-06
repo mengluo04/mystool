@@ -13,23 +13,23 @@ let uping = false
 export class update extends plugin {
     constructor() {
         super({
-            name: '[寄] 插件更新',
-            dsc: '[寄] 插件更新',
+            name: '[米游社工具] 插件更新',
+            dsc: '[米游社工具] 插件更新',
             event: 'message',
             priority: Cfg.getConfig('config').priority ?? -114514,
             rule: [
                 {
-                    reg: '^#寄(插件)?(强制)?更新$',
+                    reg: '^#米游社工具(插件)?(强制)?更新$',
                     permission: 'master',
                     fnc: 'update'
                 },
                 {
-                    reg: '^#寄(插件)?更新日志$',
+                    reg: '^#米游社工具(插件)?更新日志$',
                     fnc: 'updateLog'
                 }
             ]
         })
-        this.typeName = 'bujidao'
+        this.typeName = 'mystool'
     }
 
     async update() {
@@ -39,7 +39,7 @@ export class update extends plugin {
             return
         }
         /** 获取插件 */
-        let plugin = 'bujidao'
+        let plugin = 'mystool'
 
         /** 检查git安装 */
         if (!await this.checkGit()) return
@@ -127,12 +127,12 @@ export class update extends plugin {
         }
 
         if (errMsg.includes('be overwritten by merge')) {
-            await this.reply(msg + `存在冲突：\n${errMsg}\n` + '请解决冲突后再更新，或者执行#寄强制更新，放弃本地修改')
+            await this.reply(msg + `存在冲突：\n${errMsg}\n` + '请解决冲突后再更新，或者执行#米游社工具强制更新，放弃本地修改')
             return
         }
 
         if (stdout.includes('CONFLICT')) {
-            await this.reply([msg + '存在冲突\n', errMsg, stdout, '\n请解决冲突后再更新，或者执行#寄强制更新，放弃本地修改'])
+            await this.reply([msg + '存在冲突\n', errMsg, stdout, '\n请解决冲突后再更新，或者执行#米游社工具强制更新，放弃本地修改'])
             return
         }
 
@@ -206,7 +206,7 @@ export class update extends plugin {
     }
 
     async updateLog() {
-        let log = await this.getLog('bujidao')
+        let log = await this.getLog('mystool')
         await this.reply(log)
     }
 

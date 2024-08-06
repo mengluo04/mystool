@@ -1,8 +1,8 @@
 ## 说明
-1、有问题请百度，爱用不用。
+1、fork自[text](https://github.com/kissnavel/bujidaoRUN.git)
+2、使用
 ```
-git clone https://github.com/kissnavel/bujidaoRUN.git ./plugins/bujidao/
+git clone https://github.com/mengluo04/mystool.git ./plugins/mystool/
 ```
-2、<a href="https://github.com/babanbang/bujidaoRUN">原仓库已删</a>，本仓库修改了部分功能。
 
-3、已添加国际服支持，建议仅保留签到功能，用锅巴插件屏蔽其他功能，其他功能有更好的替代。
+3、仅保留米游社游戏签到、米游币任务、体力推送功能，增加绝区零体力

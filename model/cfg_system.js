@@ -136,7 +136,7 @@ export const cfgSchema = {
         key: '本体重试',
         type: 'num',
         def: 2,
-        desc: '需已使用#寄替换'
+        desc: '需已使用#米游社工具替换'
       },
       invalid: {
         title: '失效QQ每行显示个数',

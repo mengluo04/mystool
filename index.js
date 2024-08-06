@@ -40,12 +40,12 @@ try {
       }
     }
   }
-  logger.mark('[寄]配置文件更新完成')
+  logger.mark('[米游社工具]配置文件更新完成')
 } catch (error) {
   logger.error(error)
 }
 
-const files = fs.readdirSync('./plugins/bujidao/apps').filter(file => file.endsWith('.js'))
+const files = fs.readdirSync('./plugins/mystool/apps').filter(file => file.endsWith('.js'))
 
 let ret = []
 
@@ -60,7 +60,7 @@ for (let i in files) {
   let name = files[i].replace('.js', '')
 
   if (ret[i].status != 'fulfilled') {
-    logger.error(`载入插件错误：${logger.red(`bujidao/${name}.js`)}`)
+    logger.error(`载入插件错误：${logger.red(`mystool/${name}.js`)}`)
     logger.error(ret[i].reason)
     continue
   }

@@ -145,11 +145,11 @@ export default class Note extends base {
     this.e.isSr = game == 'sr' ? true : false
     let screenData = this.screenData
 
-    screenData.tplFile = `${this._path}/plugins/bujidao/resources/genshin/html/dailyNote/dailyNote.html`
-    screenData.pluResPath = `${this._path}/plugins/bujidao/resources/genshin/`
+    screenData.tplFile = `${this._path}/plugins/mystool/resources/genshin/html/dailyNote/dailyNote.html`
+    screenData.pluResPath = `${this._path}/plugins/mystool/resources/genshin/`
     if (this.e.isSr) {
-      screenData.tplFile = `${this._path}/plugins/bujidao/resources/StarRail/html/dailyNote/dailyNote.html`
-      screenData.pluResPath = `${this._path}/plugins/bujidao/resources/StarRail/`
+      screenData.tplFile = `${this._path}/plugins/mystool/resources/StarRail/html/dailyNote/dailyNote.html`
+      screenData.pluResPath = `${this._path}/plugins/mystool/resources/StarRail/`
     }
 
     data = {
@@ -237,8 +237,8 @@ export default class Note extends base {
       }
     }
     // 头像
-    let sricon = _.sample(fs.readdirSync(`${this._path}/plugins/bujidao/resources/StarRail/img/role`).filter(file => file.endsWith('.webp')))
-    sricon = `${this._path}/plugins/bujidao/resources/StarRail/img/role/${sricon}`
+    let sricon = _.sample(fs.readdirSync(`${this._path}/plugins/mystool/resources/StarRail/img/role`).filter(file => file.endsWith('.webp')))
+    sricon = `${this._path}/plugins/mystool/resources/StarRail/img/role/${sricon}`
     let icon = _.sample(['希儿', '白露', '艾丝妲', '布洛妮娅', '姬子', '卡芙卡', '克拉拉', '停云', '佩拉', '黑塔', '希露瓦', '银狼'])
     return {
       uid,

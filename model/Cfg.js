@@ -15,9 +15,9 @@ try {
 const _path = process.cwd().replace(/\\/g, '/')
 class Cfg {
   constructor() {
-    this.file = `${_path}/plugins/bujidao/config`
-    this.defile = `${_path}/plugins/bujidao/defSet`
-    this.resfile = `${_path}/plugins/bujidao/resources/`
+    this.file = `${_path}/plugins/mystool/config`
+    this.defile = `${_path}/plugins/mystool/defSet`
+    this.resfile = `${_path}/plugins/mystool/resources/`
     this.dir = `${_path}/plugins/xiaoyao-cvs-plugin/data/yaml/`
   }
 
