@@ -8,7 +8,6 @@ export default class base {
     this.userId = Number(e?.user_id) || String(e?.user_id)
     this.model = 'mystool'
     this.set = Cfg.getConfig('config')
-    this.note = Cfg.getConfig('defnote')
     this.white = Cfg.getConfig('white')
 
     this._path = process.cwd().replace(/\\/g, '/')
