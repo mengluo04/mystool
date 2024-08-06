@@ -1,14 +1,4 @@
-- group: 米游社工具·体力
-  list:
-    - icon: paimon
-      title: '体力'
-      desc: '多账号体力/开拓力/电量查询'
-    - icon: paimon
-      title: '(#/*)(开启/关闭)体力推送(114514)'
-      desc: '(原神/星铁|绝区零)(开启/关闭)体力推送'
-    - icon: paimon
-      title: '(#/*)体力推送200'
-      desc: '(体力/开拓力/电量)推送阈值'
+
 - group: 米游社工具·签到·群友配置
   list:
     - icon: paimon
