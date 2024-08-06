@@ -247,38 +247,7 @@ export default class apiTool {
             }
           }
         }),
-        dailyNote: {
-          url: `${hostRecord}game_record/app/hkrpg/api/note`,
-          query: `role_id=${this.uid}&server=${this.server}`
-        },
-        index: {
-          url: `${hostRecord}game_record/app/hkrpg/api/index`,
-          query: `role_id=${this.uid}&server=${this.server}`
-        },
-        spiralAbyss: {
-          url: `${hostRecord}game_record/app/hkrpg/api/challenge`,
-          query: `isPrev=true&need_all=true&role_id=${this.uid}&schedule_type=${data.schedule_type}&server=${this.server}`
-        },
-        character: {
-          url: `${hostRecord}game_record/app/hkrpg/api/avatar/info`,
-          query: `need_wiki=true&role_id=${this.uid}&server=${this.server}`
-        },
-        detail: {
-          url: `${host}event/rpgcalc/avatar/detail`,
-          query: `game=hkrpg&lang=zh-cn&item_id=${data.avatar_id}&tab_from=TabOwned&change_target_level=0&uid=${this.uid}&region=${this.server}`
-        },
-        detail_equip: {
-          url: `${host}event/rpgcalc/equipment/list`,
-          query: `game=hkrpg&lang=zh-cn&tab_from=TabAll&page=1&size=999&uid=${this.uid}&region=${this.server}`
-        },
-        detail_avatar: {
-          url: `${host}event/rpgcalc/avatar/list`,
-          query: `game=hkrpg&lang=zh-cn&tab_from=TabAll&page=1&size=999&uid=${this.uid}&region=${this.server}`
-        },
-        rogue: {
-          url: `${hostRecord}game_record/app/hkrpg/api/rogue`,
-          query: `need_detail=true&role_id=${this.uid}&schedule_type=3&server=${this.server}`
-        }
+       
       },
       zzz: {
         ...(['prod_gf_cn'].includes(this.server) ? {

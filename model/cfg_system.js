@@ -73,49 +73,7 @@ export const cfgSchema = {
       },
     }
   },
-  Note: {
-    title: '体力查询·推送设置',
-    cfg: {
-      NoteTask: {
-        title: '体力推送设置',
-        key: '体力推送',
-        def: false,
-        desc: '体力推送仅使用小组件查询'
-      },
-      TaskTime: {
-        title: '体力推送定时任务',
-        key: '推送任务',
-        type: 'cron',
-        def: '0 0/30 * * * ?',
-        desc: '可使用锅巴修改'
-      },
-      sendCD: {
-        title: '体力推送CD',
-        key: '推送CD',
-        type: 'num',
-        def: 12
-      },
-      gs_Resin: {
-        title: '原神推送默认阈值',
-        key: '原神推送',
-        type: 'num',
-        def: 140
-      },
-      sr_Resin: {
-        title: '星铁推送默认阈值',
-        key: '星铁推送',
-        type: 'num',
-        def: 200
-      },
-      forward: {
-        title: '合并转发',
-        key: '合并转发',
-        type: 'num',
-        def: 2,
-        desc: '查询体力时发送的文字消息+图片大于几条时合并转发'
-      }
-    }
-  },
+
   other: {
     title: '其他设置',
     cfg: {

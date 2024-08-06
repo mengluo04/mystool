@@ -11,7 +11,7 @@ export default class base {
     this.note = Cfg.getConfig('defnote')
     this.white = Cfg.getConfig('white')
     this.lable = Cfg.getConfig('lable')
-    this.equip = Cfg.getConfig('equip')
+
     this._path = process.cwd().replace(/\\/g, '/')
   }
 

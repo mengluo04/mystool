@@ -26,20 +26,10 @@ ddos: false
 #每次签到sk数(不建议太高嗷，小心429捏！)
 ddostime: 10
 
-#是否开启体力推送
-NoteTask: false
-#体力推送查询间隔，默认每小时30分
-TaskTime: 30 */1 * * * 
-#体力推送CD(小时)
-sendCD: 12
-#默认推送阈值
-gs_Resin: 200
-sr_Resin: 200
-zzz_Resin: 200
+
 #合并转发
 forward: 2
-#推送文案
-TaskMsg: 哥哥（姐姐）你的体力快满了哦~
+
 
 #失效qq每行显示个数
 invalid: 2
