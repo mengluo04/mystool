@@ -11,7 +11,7 @@ for (let item of [...file, "mys.json"])
     fs.copyFileSync(`${Cfg.defile}/${item}`, `${Cfg.file}/${item}`);
 
 try {
-  for (let type of ["white", "banuid", "api", "command", "config"]) {
+  for (let type of ["white", "banuid", "command", "config"]) {
     let isNew = true;
     let data = Cfg.getConfig(type);
     let defdata = Cfg.getdef(type);
