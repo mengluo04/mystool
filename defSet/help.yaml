@@ -9,14 +9,6 @@
     - icon: paimon
       title: '(#/*)体力推送160'
       desc: '(体力/开拓力)推送阈值'
-- group: 寄·预估
-  list:
-    - icon: paimon
-      title: '#原石预估'
-      desc: '原神当期或下期可获取原石预估'
-    - icon: paimon
-      title: '*星琼预估'
-      desc: '星铁当期或下期可获取星琼预估'
 - group: 寄·崩坏：星穹铁道
   list:
     - icon: paimon
@@ -53,9 +45,6 @@
     - icon: paimon
       title: '#寄还原'
       desc: '本体更新冲突时还原后更新'
-    - icon: paimon
-      title: '*武器星级更新(@群友)'
-      desc: '使用星铁功能前使用'
     - icon: paimon
       title: '#签到(添加/删除)白名单群(12345)'
       desc: '请使用锅巴配置'

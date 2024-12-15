@@ -1,7 +1,7 @@
 ## 说明
 1、有问题请百度，爱用不用。
 ```
-git clone https://github.com/kissnavel/bujidaoRUN.git ./plugins/bujidao/
+git clone https://github.com/kissnavel/bujidaoRUN.git ./plugins/mystool/
 ```
 2、<a href="https://github.com/babanbang/bujidaoRUN">原仓库</a>，本仓库修改并修复了部分功能。
 

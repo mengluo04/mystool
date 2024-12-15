@@ -1,71 +1,89 @@
-import DailyCache from '../../../genshin/model/mys/DailyCache.js'
-import NoteUser from '../../../genshin/model/mys/NoteUser.js'
-import MysUser from '../../../genshin/model/mys/MysUser.js'
-import MysApi from '../../../genshin/model/mys/mysApi.js'
-import GsCfg from '../../../genshin/model/gsCfg.js'
-import common from '../../../../lib/common/common.js'
-import Validate from './mysApi.js'
-import Cfg from '../Cfg.js'
-import _ from 'lodash'
+import DailyCache from "../../../genshin/model/mys/DailyCache.js";
+import NoteUser from "../../../genshin/model/mys/NoteUser.js";
+import MysUser from "../../../genshin/model/mys/MysUser.js";
+import MysApi from "../../../genshin/model/mys/mysApi.js";
+import GsCfg from "../../../genshin/model/gsCfg.js";
+import common from "../../../../lib/common/common.js";
+import Validate from "./mysApi.js";
+import Cfg from "../Cfg.js";
+import _ from "lodash";
 
 export default class MysInfo {
-  static tips = '请发送【#cookie帮助】查看配置教程\n或尝试【#刷新ck】'
+  static tips = "请发送【#cookie帮助】查看配置教程\n或尝试【#刷新ck】";
 
   constructor(e) {
     if (e) {
-      this.e = e
-      this.userId = String(e.user_id)
+      this.e = e;
+      this.userId = String(e.user_id);
     }
     /** 当前查询原神uid */
-    this.uid = ''
+    this.uid = "";
     /** 当前ck信息 */
     this.ckInfo = {
-      ck: '',
-      uid: '',
-      qq: '',
-      ltuid: '',
-      type: ''
-    }
+      ck: "",
+      uid: "",
+      qq: "",
+      ltuid: "",
+      type: "",
+    };
     // ck对应MysUser对象
-    this.ckUser = null
-    this.auth = ['dailyNote', 'bbs_sign_info', 'bbs_sign_home', 'bbs_sign', 'ys_ledger', 'compute', 'avatarSkill', 'detail', 'blueprint', 'UserGame', 'deckList', 'avatar_cardList', 'action_cardList', 'avatarInfo', 'role_combat', 'detail_equip', 'detail_avatar']
+    this.ckUser = null;
+    this.auth = [
+      "dailyNote",
+      "bbs_sign_info",
+      "bbs_sign_home",
+      "bbs_sign",
+      "ys_ledger",
+      "compute",
+      "avatarSkill",
+      "detail",
+      "blueprint",
+      "UserGame",
+      "deckList",
+      "avatar_cardList",
+      "action_cardList",
+      "avatarInfo",
+      "role_combat",
+      "detail_equip",
+      "detail_avatar",
+    ];
   }
 
   static async init(e, api) {
-    await MysInfo.initCache()
+    await MysInfo.initCache();
 
-    let mysInfo = new MysInfo(e)
+    let mysInfo = new MysInfo(e);
 
-    let onlySelfCk = false
+    let onlySelfCk = false;
 
     if (mysInfo.checkAuth(api)) {
       /** 获取ck绑定uid */
-      mysInfo.uid = await MysInfo.getSelfUid(e)
+      mysInfo.uid = await MysInfo.getSelfUid(e);
       // 标记需要自身ck
-      onlySelfCk = true
+      onlySelfCk = true;
     } else {
       /** 获取uid */
-      mysInfo.uid = await MysInfo.getUid(e)
+      mysInfo.uid = await MysInfo.getUid(e);
     }
 
     if (!mysInfo.uid) {
-      e.noTips = true
-      return false
+      e.noTips = true;
+      return false;
     }
 
-    if (!/^(1[0-9]|[6-9])[0-9]{8}/i.test(mysInfo.uid) && api === 'useCdk') {
-      e.reply('兑换码使用只支持国际服uid')
-      return false
+    if (!/^(1[0-9]|[6-9])[0-9]{8}/i.test(mysInfo.uid) && api === "useCdk") {
+      e.reply("兑换码使用只支持国际服uid");
+      return false;
     }
 
-    mysInfo.e.uid = mysInfo.uid
+    mysInfo.e.uid = mysInfo.uid;
 
     /** 获取ck */
-    await mysInfo.getCookie(e, onlySelfCk)
+    await mysInfo.getCookie(e, onlySelfCk);
 
     /** 判断回复 */
-    await mysInfo.checkReply()
-    return mysInfo
+    await mysInfo.checkReply();
+    return mysInfo;
   }
 
   /**
@@ -75,42 +93,42 @@ export default class MysInfo {
    * @returns {Promise<string|boolean|*|string>}
    */
   static async getUid(e, matchMsgUid = true) {
-    let user = await NoteUser.create(e)
+    let user = await NoteUser.create(e);
     if (e.uid && matchMsgUid) {
       /** 没有绑定的自动绑定 */
-      return user.autoRegUid(e.uid, e)
+      return user.autoRegUid(e.uid, e);
     }
 
-    let { msg = '', at = '' } = e
-    if (!msg) return false
+    let { msg = "", at = "" } = e;
+    if (!msg) return false;
 
-    let uid
+    let uid;
     /** at用户 */
     if (at) {
-      let atUser = await NoteUser.create(at)
-      uid = atUser.getUid(e)
-      if (uid) return String(uid)
-      if (e.noTips !== true) e.reply('尚未绑定uid', false, { at })
-      return false
+      let atUser = await NoteUser.create(at);
+      uid = atUser.getUid(e);
+      if (uid) return String(uid);
+      if (e.noTips !== true) e.reply("尚未绑定uid", false, { at });
+      return false;
     }
 
-    let matchUid = (msg = '') => {
-      let ret = /(1[0-9]|[1-9])?[0-9]{8}/g.exec(msg)
-      if (!ret) return false
-      return ret[0]
-    }
+    let matchUid = (msg = "") => {
+      let ret = /(1[0-9]|[1-9])?[0-9]{8}/g.exec(msg);
+      if (!ret) return false;
+      return ret[0];
+    };
 
     // 消息携带UID、当前用户UID、群名片携带UID 依次获取
-    uid = matchUid(msg) || user.getUid(e) || matchUid(e.sender.card)
-    if (!matchMsgUid) uid = user.getUid(e)
+    uid = matchUid(msg) || user.getUid(e) || matchUid(e.sender.card);
+    if (!matchMsgUid) uid = user.getUid(e);
     if (uid) {
       /** 没有绑定的自动绑定 */
-      return user.autoRegUid(uid, e)
+      return user.autoRegUid(uid, e);
     }
 
-    if (e.noTips !== true) e.reply('请先#绑定uid', false, { at })
+    if (e.noTips !== true) e.reply("请先#绑定uid", false, { at });
 
-    return false
+    return false;
   }
 
   /**
@@ -119,18 +137,19 @@ export default class MysInfo {
    * @returns {Promise<boolean|*>}
    */
   static async getSelfUid(e) {
-    let { msg = '', at = '' } = e
-    if (!msg) return false
+    let { msg = "", at = "" } = e;
+    if (!msg) return false;
 
-    let user = await NoteUser.create(e)
-    let selfUser = at ? await NoteUser.create(at) : user
+    let user = await NoteUser.create(e);
+    let selfUser = at ? await NoteUser.create(at) : user;
 
     if (!selfUser.hasCk) {
-      if (e.noTips !== true) e.reply('尚未绑定cookie', false, { at: selfUser.qq })
-      return false
+      if (e.noTips !== true)
+        e.reply("尚未绑定cookie", false, { at: selfUser.qq });
+      return false;
     }
 
-    return selfUser.getUid(e)
+    return selfUser.getUid(e);
   }
 
   /**
@@ -152,50 +171,59 @@ export default class MysInfo {
    * @param option.log 是否显示请求日志
    */
   static async get(e, api, data = {}, option = {}, ji = false) {
-    let mysInfo = await MysInfo.init(e, api)
+    let mysInfo = await MysInfo.init(e, api);
 
-    if (!mysInfo.uid || !mysInfo.ckInfo.ck) return false
-    e.uid = mysInfo.uid
+    if (!mysInfo.uid || !mysInfo.ckInfo.ck) return false;
+    e.uid = mysInfo.uid;
 
-    let user = e.user?.getMysUser()
-    option.device = user.device
-    option.game = e?.game || (e?.isSr ? 'sr' : 'gs')
-    let mysApi
+    let user = e.user?.getMysUser();
+    option.device = user.device;
+    option.game = e?.game || (e?.isSr ? "sr" : "gs");
+    let mysApi;
     if (ji)
-      mysApi = new Validate(mysInfo.uid, mysInfo.ckInfo.ck, option, e.isZzz ? 'zzz' : e.isSr ? 'sr' : 'gs')
-    else
-      mysApi = new MysApi(mysInfo.uid, mysInfo.ckInfo.ck, option)
+      mysApi = new Validate(
+        mysInfo.uid,
+        mysInfo.ckInfo.ck,
+        option,
+        e.isZzz ? "zzz" : e.isSr ? "sr" : "gs"
+      );
+    else mysApi = new MysApi(mysInfo.uid, mysInfo.ckInfo.ck, option);
 
-    let res
+    let res;
     if (_.isObject(api)) {
-      let all = []
-      await mysApi.getData('getFp')
+      let all = [];
+      await mysApi.getData("getFp");
       /** 同步请求 */
       if (e.apiSync) {
-        res = []
-        for (let i in api)
-          res.push(await mysApi.getData(i, api[i]))
+        res = [];
+        for (let i in api) res.push(await mysApi.getData(i, api[i]));
       } else {
         _.forEach(api, (v, i) => {
-          all.push(mysApi.getData(i, v))
-        })
-        res = await Promise.all(all)
+          all.push(mysApi.getData(i, v));
+        });
+        res = await Promise.all(all);
       }
 
       for (let i in res) {
-        res[i] = await mysInfo.checkCode(res[i], res[i].api, mysApi, api[res[i].api])
+        res[i] = await mysInfo.checkCode(
+          res[i],
+          res[i].api,
+          mysApi,
+          api[res[i].api]
+        );
 
-        if ([-1, -100, 1001, 10001, 10103].includes(res[i]?.retcode)) return false
-        if (res[i]?.retcode === 0) continue
+        if ([-1, -100, 1001, 10001, 10103].includes(res[i]?.retcode))
+          return false;
+        if (res[i]?.retcode === 0) continue;
 
-        break
+        break;
       }
     } else {
-      res = await mysApi.getData(api, data)
-      res = await mysInfo.checkCode(res, api, mysApi, data)
+      res = await mysApi.getData(api, data);
+      res = await mysInfo.checkCode(res, api, mysApi, data);
     }
 
-    return res
+    return res;
   }
 
   /**
@@ -204,17 +232,17 @@ export default class MysInfo {
    */
   static async initPubCk() {
     // 初始化公共CK
-    let pubCount = 0
-    let pubCks = GsCfg.getConfig('mys', 'pubCk') || []
+    let pubCount = 0;
+    let pubCks = GsCfg.getConfig("mys", "pubCk") || [];
     for (let ck of pubCks) {
-      let pubUser = await MysUser.create(ck)
+      let pubUser = await MysUser.create(ck);
       if (pubUser) {
-        let ret = await pubUser.initCache({ qq: 'pub' })
-        if (ret) pubCount++
-        if (pubCount >= 20) break
+        let ret = await pubUser.initCache({ qq: "pub" });
+        if (ret) pubCount++;
+        if (pubCount >= 20) break;
       }
     }
-    logger.mark(`加载公共ck：${pubCount}个`)
+    logger.mark(`加载公共ck：${pubCount}个`);
   }
 
   /**
@@ -224,12 +252,12 @@ export default class MysInfo {
    */
   static async initUserCk() {
     // 初始化用户缓存
-    let userCount = 0
+    let userCount = 0;
     await MysUser.forEach(async (mys) => {
-      let ret = await mys.initCache()
-      if (ret) userCount++
-    })
-    logger.mark(`加载用户UID：${userCount}个，加入查询池`)
+      let ret = await mys.initCache();
+      if (ret) userCount++;
+    });
+    logger.mark(`加载用户UID：${userCount}个，加入查询池`);
   }
 
   /**
@@ -240,65 +268,64 @@ export default class MysInfo {
    */
   static async initCache(force = false, clearData = false) {
     // 检查缓存标记
-    const cache = DailyCache.create()
-    if (!force && await cache.get('cache-ready') || this.initing) 
-      return true
+    const cache = DailyCache.create();
+    if ((!force && (await cache.get("cache-ready"))) || this.initing)
+      return true;
 
-    this.initing = true
-    await DailyCache.clearOutdatedData()
+    this.initing = true;
+    await DailyCache.clearOutdatedData();
 
-    if (clearData)
-      await MysUser.clearCache()
+    if (clearData) await MysUser.clearCache();
 
     // 先初始化用户CK，减少一些公共CK中ltuid无法识别的情况
-    await MysInfo.initUserCk()
+    await MysInfo.initUserCk();
 
     // 初始化公共ck
-    await MysInfo.initPubCk()
+    await MysInfo.initPubCk();
 
-    await cache.set('cache-ready', new Date() * 1)
-    delete this.initing
-    return true
+    await cache.set("cache-ready", new Date() * 1);
+    delete this.initing;
+    return true;
   }
 
   static async getBingCkUid() {
-    let res = await GsCfg.getBingCk()
-    return { ...res.ck }
+    let res = await GsCfg.getBingCk();
+    return { ...res.ck };
   }
 
   // 获取uid绑定的ck信息
-  static async checkUidBing(uid, game = 'gs') {
-    let ckUser = await MysUser.getByQueryUid(uid, game, true)
-    if (ckUser && ckUser.ck) return ckUser
+  static async checkUidBing(uid, game = "gs") {
+    let ckUser = await MysUser.getByQueryUid(uid, game, true);
+    if (ckUser && ckUser.ck) return ckUser;
 
-    return false
+    return false;
   }
 
   static async delDisable() {
-    return await MysUser.delDisable()
+    return await MysUser.delDisable();
   }
 
   /** 判断绑定ck才能查询 */
   checkAuth(api) {
-    if (api === 'cookie') return true
+    if (api === "cookie") return true;
 
     if (_.isObject(api)) {
-      for (let i in api)
-        if (this.auth.includes(i)) return true
+      for (let i in api) if (this.auth.includes(i)) return true;
     } else if (this.auth.includes(api)) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   async checkReply() {
-    if (this.e.noTips === true) return
+    if (this.e.noTips === true) return;
 
-    if (!this.uid) this.e.reply('请先#绑定uid')
+    if (!this.uid) this.e.reply("请先#绑定uid");
 
-    if (!this.ckInfo.ck) this.e.reply('请发送【#cookie帮助】查看配置教程\n或尝试【#刷新ck】')
+    if (!this.ckInfo.ck)
+      this.e.reply("请发送【#cookie帮助】查看配置教程\n或尝试【#刷新ck】");
 
-    this.e.noTips = true
+    this.e.noTips = true;
   }
 
   /* 获取请求所需ck */
@@ -308,38 +335,38 @@ export default class MysInfo {
    * @param onlySelfCk 是否只获取uid自己对应的ck。为true则只获取uid对应ck，若无则返回为空
    * @returns {Promise<string|string|*>} 查询ck，获取失败则返回空
    */
-  async getCookie(game = 'gs', onlySelfCk = false) {
-    if (this.ckUser?.ck) return this.ckUser?.ck
+  async getCookie(game = "gs", onlySelfCk = false) {
+    if (this.ckUser?.ck) return this.ckUser?.ck;
 
-    let mysUser = await MysUser.getByQueryUid(this.uid, game, onlySelfCk)
+    let mysUser = await MysUser.getByQueryUid(this.uid, game, onlySelfCk);
     if (mysUser) {
       if (mysUser.ck) {
-        this.ckInfo = mysUser.getCkInfo()
-        this.ckUser = mysUser
+        this.ckInfo = mysUser.getCkInfo();
+        this.ckUser = mysUser;
         // 暂时直接记录请求uid，后期优化分析MysApi请求结果分状态记录结果
-        await mysUser.addQueryUid(this.uid, game)
+        await mysUser.addQueryUid(this.uid, game);
       } else {
         // 重新分配
-        await mysUser.disable(game)
-        return onlySelfCk ? '' : await this.getCookie(game)
+        await mysUser.disable(game);
+        return onlySelfCk ? "" : await this.getCookie(game);
       }
     }
-    return this.ckUser?.ck
+    return this.ckUser?.ck;
   }
 
   async checkCode(res, type, mysApi = {}, data = {}, isTask = false) {
     if (!res) {
-      if (!isTask) this.e.reply(`UID:${this.uid}，米游社接口请求失败，暂时无法查询`)
-      return false
+      if (!isTask)
+        this.e.reply(`UID:${this.uid}，米游社接口请求失败，暂时无法查询`);
+      return false;
     }
 
-    res.retcode = Number(res.retcode)
-    if (type === 'bbs_sign')
-      if ([-5003].includes(res.retcode)) res.retcode = 0
+    res.retcode = Number(res.retcode);
+    if (type === "bbs_sign") if ([-5003].includes(res.retcode)) res.retcode = 0;
 
     switch (res.retcode) {
       case 0:
-        break
+        break;
       case -1:
       case -100:
       case 1001:
@@ -347,155 +374,188 @@ export default class MysInfo {
       case 10103:
         if (/(登录|login)/i.test(res.message)) {
           if (this.ckInfo.uid) {
-            logger.mark(`[ck失效][UID:${this.uid}][qq:${this.userId}]`)
-            if (!isTask) this.e.reply(`UID:${this.ckInfo.uid}，米游社cookie已失效`)
+            logger.mark(`[ck失效][UID:${this.uid}][qq:${this.userId}]`);
+            if (!isTask)
+              this.e.reply(`UID:${this.ckInfo.uid}，米游社cookie已失效`);
           } else {
-            logger.mark(`[公共ck失效][ltuid:${this.ckInfo.ltuid}]`)
-            if (!isTask) this.e.reply(`UID:${this.uid}，米游社查询失败，请稍后再试`)
+            logger.mark(`[公共ck失效][ltuid:${this.ckInfo.ltuid}]`);
+            if (!isTask)
+              this.e.reply(`UID:${this.uid}，米游社查询失败，请稍后再试`);
           }
-          if (!isTask) await this.delCk()
+          if (!isTask) await this.delCk();
         } else {
-          if (!isTask) this.e.reply(`UID:${this.uid}，米游社接口报错，暂时无法查询：${res.message}`)
+          if (!isTask)
+            this.e.reply(
+              `UID:${this.uid}，米游社接口报错，暂时无法查询：${res.message}`
+            );
         }
-        break
+        break;
       case 1008:
-        if (!isTask) this.e.reply(`\nUID:${this.uid}，请先去米游社绑定角色`, false, { at: this.userId })
-        break
+        if (!isTask)
+          this.e.reply(`\nUID:${this.uid}，请先去米游社绑定角色`, false, {
+            at: this.userId,
+          });
+        break;
       case 10101:
         if (!isTask) {
-          await this.disableToday(this.e)
-          this.e.reply(`UID:${this.uid}，查询已达今日上限`)
+          await this.disableToday(this.e);
+          this.e.reply(`UID:${this.uid}，查询已达今日上限`);
         }
-        break
+        break;
       case 10102:
-        if (res.message === 'Data is not public for the user') {
-          if (!isTask) this.e.reply(`\nUID:${this.uid}，米游社数据未公开`, false, { at: this.userId })
+        if (res.message === "Data is not public for the user") {
+          if (!isTask)
+            this.e.reply(`\nUID:${this.uid}，米游社数据未公开`, false, {
+              at: this.userId,
+            });
         } else {
-          if (!isTask) this.e.reply(`UID:${this.uid}，请先去米游社绑定角色`)
+          if (!isTask) this.e.reply(`UID:${this.uid}，请先去米游社绑定角色`);
         }
-        break
+        break;
       // 伙伴不存在~
       case -1002:
-        if (res.api === 'detail') res.retcode = 0
-        break
+        if (res.api === "detail") res.retcode = 0;
+        break;
       case 5003:
       case 10041:
-        if (!isTask) this.e.reply(`UID:${this.uid}，米游社账号异常，暂时无法查询`)
-        break
+        if (!isTask)
+          this.e.reply(`UID:${this.uid}，米游社账号异常，暂时无法查询`);
+        break;
       case 1034:
       case 10035:
-        let retcode = res.retcode
-        let retry = 0
-        res = await this.geetest(type, mysApi, data, retcode)
-        while ((res?.retcode == 1034 || res?.retcode == 10035) && retry < Cfg.getConfig('config').retrytime) {
-          res = await this.geetest(type, mysApi, data, res?.retcode)
-          retry++
+        let retcode = res.retcode;
+        let retry = 0;
+        res = await this.geetest(type, mysApi, data, retcode);
+        while (
+          (res?.retcode == 1034 || res?.retcode == 10035) &&
+          retry < Cfg.getConfig("config").retrytime
+        ) {
+          res = await this.geetest(type, mysApi, data, res?.retcode);
+          retry++;
         }
         if (!isTask)
           if (res?.retcode !== 0 && res.retcode !== 10103) {
-            logger.mark(`[米游社查询失败][UID:${this.uid}][qq:${this.userId}] 遇到验证码`)
-            this.e.reply('米游社查询遇到验证码，请稍后再试')
+            logger.mark(
+              `[米游社查询失败][UID:${this.uid}][qq:${this.userId}] 遇到验证码`
+            );
+            this.e.reply("米游社查询遇到验证码，请稍后再试");
           }
-        break
+        break;
       case 10307:
-        if (!isTask) this.e.reply(`UID:${this.uid}，版本更新期间，数据维护中`)
-        break
+        if (!isTask) this.e.reply(`UID:${this.uid}，版本更新期间，数据维护中`);
+        break;
       default:
-        if (!isTask) this.e.reply(`UID:${this.uid}，米游社接口报错，暂时无法查询：${res.message || 'error'}`)
-        break
+        if (!isTask)
+          this.e.reply(
+            `UID:${this.uid}，米游社接口报错，暂时无法查询：${
+              res.message || "error"
+            }`
+          );
+        break;
     }
     if (res.retcode !== 0) {
-      logger.mark(`[mys接口报错]${JSON.stringify(res)}，UID：${this.uid}`)
+      logger.mark(`[mys接口报错]${JSON.stringify(res)}，UID：${this.uid}`);
     }
-    if (type === 'character' && res.data?.list) res.data.avatars = res.data?.list
+    if (type === "character" && res.data?.list)
+      res.data.avatars = res.data?.list;
     // 添加请求记录
-    if (!isTask) await this.ckUser.addQueryUid(this.uid, this.e)
-    return res
+    if (!isTask) await this.ckUser.addQueryUid(this.uid, this.e);
+    return res;
   }
 
   async geetest(type, mysApi, data, retcode = 1034) {
-    let res = await mysApi.getData(type, data)
-    if (res?.retcode == 0 || (type == 'detail' && res?.retcode == -1002)) return res
+    let res = await mysApi.getData(type, data);
+    if (res?.retcode == 0 || (type == "detail" && res?.retcode == -1002))
+      return res;
 
-    if (data?.headers) delete data.headers
+    if (data?.headers) delete data.headers;
     try {
-      let vali = new Validate(mysApi.uid, mysApi.cookie, mysApi.option, 'all')
-      
-      let headers = { 'x-rpc-device_fp': await this.getFp(vali) }
-      let app_key = ''
-      if (mysApi.isSr || mysApi.game == 'sr') {
-        headers['x-rpc-challenge_game'] = '6'
-        app_key = 'hkrpg_game_record'
+      let vali = new Validate(mysApi.uid, mysApi.cookie, mysApi.option, "all");
+
+      let headers = { "x-rpc-device_fp": await this.getFp(vali) };
+      let app_key = "";
+      if (mysApi.isSr || mysApi.game == "sr") {
+        headers["x-rpc-challenge_game"] = "6";
+        app_key = "hkrpg_game_record";
       }
-      if (mysApi.isZzz || mysApi.game == 'zzz') {
-        headers['x-rpc-challenge_game'] = '8'
-        app_key = 'game_record_zzz'
+      if (mysApi.isZzz || mysApi.game == "zzz") {
+        headers["x-rpc-challenge_game"] = "8";
+        app_key = "game_record_zzz";
       }
 
-      res = await vali.getData(retcode == 10035 ? "createGeetest" : "createVerification", { headers, app_key })
-      if (!res) return { "data": null, "message": "公共ck失效", "retcode": 10103 }
+      res = await vali.getData(
+        retcode == 10035 ? "createGeetest" : "createVerification",
+        { headers, app_key }
+      );
+      if (!res) return { data: null, message: "公共ck失效", retcode: 10103 };
 
-      res = await vali.getData("recognize", res?.data)
+      res = await vali.getData("recognize", res?.data);
       if (res?.resultid) {
-        let results = res
-        let retry = 0
-        await common.sleep(5000)
-        res = await vali.getData("results", results)
-        while ((res?.status == 2) && retry < 5) {
-          await common.sleep(5000)
-          res = await vali.getData("results", results)
-          retry++
+        let results = res;
+        let retry = 0;
+        await common.sleep(5000);
+        res = await vali.getData("results", results);
+        while (res?.status == 2 && retry < 5) {
+          await common.sleep(5000);
+          res = await vali.getData("results", results);
+          retry++;
         }
       }
-      if (!res?.data?.validate) return { "data": null, "message": `${Cfg.getConfig('api').api}验证码失败`, "retcode": 1034 }
+      if (!res?.data?.validate)
+        return {
+          data: null,
+          message: `${Cfg.getConfig("api").api}验证码失败`,
+          retcode: 1034,
+        };
 
-      res = await vali.getData(retcode == 10035 ? "verifyGeetest" : "verifyVerification", {
-        ...res?.data,
-        headers,
-        app_key
-      })
+      res = await vali.getData(
+        retcode == 10035 ? "verifyGeetest" : "verifyVerification",
+        {
+          ...res?.data,
+          headers,
+          app_key,
+        }
+      );
 
       if (res?.data?.challenge) {
         res = await mysApi.getData(type, {
           headers: {
             "x-rpc-challenge": res?.data?.challenge,
-            ...headers
+            ...headers,
           },
-          ...data
-        })
+          ...data,
+        });
       }
-      if (res?.retcode !== 0)
-        return { "data": null, "message": "", "retcode": 1034 }
-
+      if (res?.retcode !== 0) return { data: null, message: "", retcode: 1034 };
     } catch (error) {
-      logger.error("无感日志：" + error)
-      return { "data": null, "message": "", "retcode": 1034 }
+      logger.error("无感日志：" + error);
+      return { data: null, message: "", retcode: 1034 };
     }
-    return res
+    return res;
   }
   async getFp(mysApi) {
-    let game = mysApi.game
-    let key = `${game}_DEVICE_FP:${mysApi.uid}`
-    let deviceFp = await redis.get(key)
+    let game = mysApi.game;
+    let key = `${game}_DEVICE_FP:${mysApi.uid}`;
+    let deviceFp = await redis.get(key);
     if (!deviceFp) {
-      deviceFp = await mysApi.getData('getFp', {}, 'all')
-      mysApi.game = game
-      deviceFp = deviceFp?.data?.device_fp
+      deviceFp = await mysApi.getData("getFp", {}, "all");
+      mysApi.game = game;
+      deviceFp = deviceFp?.data?.device_fp;
       try {
-        if (deviceFp) await redis.set(key, deviceFp, { EX: 86400 * 1 })
-      } catch (error) { }
+        if (deviceFp) await redis.set(key, deviceFp, { EX: 86400 * 1 });
+      } catch (error) {}
     }
-    return deviceFp
+    return deviceFp;
   }
   /** 删除失效ck */
   async delCk() {
-    await Cfg.delck(this.ckInfo.ltuid, this.ckInfo.qq)
-    await MysInfo.initCache(true, true)
+    await Cfg.delck(this.ckInfo.ltuid, this.ckInfo.qq);
+    await MysInfo.initCache(true, true);
   }
 
   /** 查询次数满，今日内标记失效 */
-  async disableToday(game = 'gs') {
+  async disableToday(game = "gs") {
     /** 统计次数设为超限 */
-    await this.ckUser.disable(game)
+    await this.ckUser.disable(game);
   }
 }
